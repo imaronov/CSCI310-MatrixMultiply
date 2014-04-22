@@ -25,4 +25,3 @@ mm-serial.o: mm-serial.c
 
 clean:
 	rm -f $(PROGS) *.o core* *.~
-	rm -f *.o

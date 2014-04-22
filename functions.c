@@ -47,18 +47,36 @@ void printArrayToFile(int size, double** array, char* file_name) {
 	fclose(ptr_file);
 }
 
-//TODO: check if file exists
 void loadFile2Darray(int* size, double*** array, char* file_name) {
 	FILE* ptr_file;
 	double** x;
 	double* data;
+	size_t read_result = NULL;
 
+	// check if file exists
 	ptr_file = fopen(file_name, "r");
+	if (ptr_file == NULL) {
+		perror(file_name);
+		exit(404);
+	}
 	
-	fread(size, sizeof(int), 1, ptr_file);	// reads the size of the matrix
+	// read size of matrix
+	read_result = fread(size, sizeof(int), 1, ptr_file);
+	// check if read is successfull
+	if (read_result != 1) {
+		fprintf(stderr, "Error reading file: %s\n", file_name);
+		exit(500);
+	}
 	x = (double**)malloc(*size * sizeof(double*));
 	data = (double*)malloc(*size * *size * sizeof(double));
-	fread(data, sizeof(double), *size * *size, ptr_file);
+	
+	// reads array data
+	read_result = fread(data, sizeof(double), *size * *size, ptr_file);
+	// check if read is successfull	
+	if (read_result != (*size * *size)) {
+		fprintf(stderr, "Error reading file: %s\n", file_name);
+		exit(500);
+	}
 
 	int i;
 	for(i = 0; i < *size; i++) {

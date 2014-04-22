@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "functions.h"
+#define NUMBER_OF_PASSES 10
 
 int main(int argc, char** argv) {
 	double** matrix_one;
@@ -10,11 +11,10 @@ int main(int argc, char** argv) {
 	int matrix_one_size;
 	int matrix_two_size;
 	int product_matrix_size;
-	//unsigned long floating_point_operations;
+	int i;
 
 	clock_t start, stop;
 	double elapse_time;
-	//unsigned long flops;
 
 	// check for the number of arguments passed	
 	if(argc < 4) {
@@ -43,13 +43,14 @@ int main(int argc, char** argv) {
 	// timing
 	start = clock();
 	// multiply matricies
-	mult2Darray(matrix_one_size, matrix_one, matrix_two, product_matrix);
+	for (i = 0; i < NUMBER_OF_PASSES; i++) {
+		mult2Darray(matrix_one_size, matrix_one, matrix_two, product_matrix);
+	}
 	stop = clock();
 	elapse_time = (double)(stop - start) / CLOCKS_PER_SEC;
-	//floating_point_operations = product_matrix_size * product_matrix_size * product_matrix_size;
-	//flops = floating_point_operations / elapse_time;
+
 	// print results to screen
-	printf("%i\t%f\n", product_matrix_size, elapse_time);
+	printf("%i\t%i\t%f\n", NUMBER_OF_PASSES, product_matrix_size, elapse_time);
 
 	// write answer to file
 	printArrayToFile(product_matrix_size, product_matrix, argv[3]);
